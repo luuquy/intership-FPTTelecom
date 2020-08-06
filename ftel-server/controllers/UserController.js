@@ -100,11 +100,6 @@ const loginController = async (req, res) => {
   var username = req.body.username;
   var password = req.body.password;
 
-  let getIdUser = await getUserIdByUsername(username);
-  result = JSON.parse(JSON.stringify(getIdUser));
-  iduser = result.iduser;
-  console.log(iduser);
-
   db.query("SELECT * FROM user WHERE username = ?", [username], function (
     error,
     results
@@ -113,6 +108,11 @@ const loginController = async (req, res) => {
       res.status(400).send({ message: "There are some error with query" });
     } else {
       if (results.length > 0) {
+        let getIdUser = getUserIdByUsername(username);
+        result = JSON.parse(JSON.stringify(getIdUser));
+        iduser = result.iduser;
+        console.log(iduser);
+
         if (password == results[0].password) {
           token = jwt.sign(
             {
